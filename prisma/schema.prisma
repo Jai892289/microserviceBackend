@@ -13,4 +13,29 @@ model User {
   email    String @unique
   password String
   createdAt DateTime @default(now())
+  services user_services[]
+}
+
+
+model Services {
+  id Int @id @default(autoincrement())
+  name String
+  users user_services[]
+
+  createdAt DateTime @default(now())
+}
+
+model user_services{
+  id Int @id @default(autoincrement())
+
+empId Int
+serviceId Int
+
+employee User @relation(fields:[empId], references:[id])
+service Services @relation(fields:[serviceId], references:[id])
+
+  @@unique([empId, serviceId])
+
+    createdAt DateTime @default(now())
+
 }

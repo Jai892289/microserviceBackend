@@ -24,6 +24,47 @@ app.get('/users', async (req, res) => {
   res.json(users);
 });
 
+
+app.post('/user-service', async (req, res) => {
+  const { empId, serviceId } = req.body;
+
+  const service = await prisma.user_services.upsert({
+    where: {
+      empId_serviceId: {
+        empId: Number(empId),
+        serviceId: Number(serviceId),
+      },
+    },
+
+    update: {},
+    create: {
+      empId: Number(empId),
+      serviceId: Number(serviceId),
+    },
+  })
+  res.json(service);
+})
+
+app.post('/user-data', async (req, res) => {
+
+  try {
+    const { id } = req.query;
+
+    const user = await prisma.user.findUnique({
+      where: { id: Number(id) },
+      include: {
+        services: {
+          include: { service: true },
+        },
+      },
+    });
+
+    res.json(user);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+})
+
 app.listen(3001, () => {
   console.log('User service running on http://localhost:3001');
 });
