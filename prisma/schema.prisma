@@ -14,6 +14,7 @@ model User {
   password String
   createdAt DateTime @default(now())
   services user_services[]
+  subscription subscription[]
 }
 
 
@@ -38,4 +39,17 @@ service Services @relation(fields:[serviceId], references:[id])
 
     createdAt DateTime @default(now())
 
+}
+
+
+model subscription {
+  id Int @id @default(autoincrement())
+  name String
+  desc String
+
+  empId Int
+  employee User @relation(fields:[empId] , references:[id])
+
+
+  createdAt DateTime @default(now())
 }
